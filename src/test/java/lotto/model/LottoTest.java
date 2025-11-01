@@ -38,8 +38,8 @@ class LottoTest {
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("LottoNumberSizeTestData")
     @DisplayName("로또_번호의_개수가_6이_아니면_예외가_발생한다")
-    void verifyLottoNumberSize(List<Integer> lottoNumbers) {
-        assertThatThrownBy(() -> new Lotto(lottoNumbers))
+    void verifyLottoNumberSize(List<Integer> testLottoNumbers) {
+        assertThatThrownBy(() -> new Lotto(testLottoNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 로또 번호는 6개여야 합니다.");
     }
@@ -47,8 +47,8 @@ class LottoTest {
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("LottoNumberRangeTestData")
     @DisplayName("로또_번호_범위가_1부터_45가_아니면_예외가_발생한다")
-    void verifyLottoNumberRange(List<Integer> lottoNumbers) {
-        assertThatThrownBy(() -> new Lotto(lottoNumbers))
+    void verifyLottoNumberRange(List<Integer> testLottoNumbers) {
+        assertThatThrownBy(() -> new Lotto(testLottoNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 로또 번호는 1부터 45의 범위여야 합니다.");
     }
@@ -56,8 +56,8 @@ class LottoTest {
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("LottoNumberDuplicationTestData")
     @DisplayName("로또_번호에_중복된_숫자가_있으면_예외가_발생한다")
-    void verifyLottoNumberDuplication(List<Integer> lottoNumbers) {
-        assertThatThrownBy(() -> new Lotto(lottoNumbers))
+    void verifyLottoNumberDuplication(List<Integer> testLottoNumbers) {
+        assertThatThrownBy(() -> new Lotto(testLottoNumbers))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 로또 번호는 서로 중복되지 않아야 합니다.");
     }
