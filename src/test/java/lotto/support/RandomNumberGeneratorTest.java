@@ -13,7 +13,7 @@ public class RandomNumberGeneratorTest {
     private List<Integer> numbers = new ArrayList<>(6);
 
     @Test
-    @DisplayName("난수가_1부터_45까지_6개를_생성하지_않으면_오류")
+    @DisplayName("난수가_1부터_45_중에_생성")
     public void verifyRandomGeneratedNumbers() {
         numbers = randomNumberGenerate();
 

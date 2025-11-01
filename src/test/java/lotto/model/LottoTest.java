@@ -27,11 +27,11 @@ class LottoTest {
 
     static Stream<Arguments> LottoNumberDuplicationTestData() {
         return Stream.of(
-                Arguments.of(List.of(1, 1, 3, 4, 5, 6)), // 45가 넘은 숫자 포함
-                Arguments.of(List.of(1, 1, 1, 4, 5, 6)), // 1보다 작은 숫자 포함
-                Arguments.of(List.of(1, 1, 1, 1, 5, 6)), // 45넘는 숫자 & 1보다 작은 숫자 포함
-                Arguments.of(List.of(1, 1, 1, 1, 1, 6)), // 45넘는 숫자 & 1보다 작은 숫자 포함
-                Arguments.of(List.of(1, 1, 1, 1, 1, 1)) // 45넘는 숫자 & 1보다 작은 숫자 포함
+                Arguments.of(List.of(1, 1, 3, 4, 5, 6)), // 중복된 숫자 2개
+                Arguments.of(List.of(1, 1, 1, 4, 5, 6)), // 중복된 숫자 3개
+                Arguments.of(List.of(1, 1, 1, 1, 1, 6)), // 중복된 숫자 4개
+                Arguments.of(List.of(1, 1, 1, 1, 5, 6)), // 중복된 숫자 5개
+                Arguments.of(List.of(1, 1, 1, 1, 1, 1)) // 중복된 숫자 6개
         );
     }
 
