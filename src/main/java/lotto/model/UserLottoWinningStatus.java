@@ -130,14 +130,8 @@ public class UserLottoWinningStatus {
         return sum;
     }
 
-    public int getEachWinningCount(theNumberOfWon rewardType) {
+    public long getEachWinningCount(theNumberOfWon rewardType) {
         return winningAmounts.get(rewardType) / rewardInstruction.get(rewardType);
-    }
-
-    ///
-
-    public Map<theNumberOfWon, Integer> getUserLottoStatus() {
-        return winningAmounts;
     }
 }
 
