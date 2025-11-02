@@ -8,6 +8,7 @@ import lotto.model.Lotto;
 import lotto.model.UserLottoWinningStatus;
 import lotto.model.WinningLottoNumber;
 import lotto.view.Input;
+import lotto.view.Output;
 
 public class Game {
     void updateProfitRate(UserLottoWinningStatus userLottoWinningStatus) {
@@ -54,17 +55,17 @@ public class Game {
         UserLottoWinningStatus userLottoWinningStatus;
         while (true) {
             try {
-                int lottoCount = Input.readPaidMoney(); // 금액 입력 받아 로또 횟수 받기
-                userLottoWinningStatus = new UserLottoWinningStatus(lottoCount);// 로또 유저 테이블 생성
+                int paidMoney = Input.readPaidMoney(); // 금액 입력
+                userLottoWinningStatus = new UserLottoWinningStatus(paidMoney);// 로또 유저 테이블 생성
                 break;
             } catch (IllegalArgumentException e) {
-
+                System.out.println("[ERROR] 금액은 1000단위여야 합니다.");
             }
         }
         return userLottoWinningStatus;
     }
 
-    void run() {
+    public void run() {
         // 금액 입력 및 현황판 생성
         UserLottoWinningStatus userLottoWinningStatus = readPaidMoneyThenMakeUserStatus();
 
@@ -72,7 +73,7 @@ public class Game {
         pickLottos(userLottoWinningStatus);
 
         // 생성한 로또 출력 함수
-
+        Output.printLotto(userLottoWinningStatus);
         // 당첨 번호 생성 및 저장
         WinningLottoNumber winningLottoNumber = pickWinningLotto();
 
@@ -83,5 +84,7 @@ public class Game {
         updateProfitRate(userLottoWinningStatus);
 
         // 결과 출력
+        Output.printResult(userLottoWinningStatus);
+        Output.printProfitRate(userLottoWinningStatus);
     }
 }
