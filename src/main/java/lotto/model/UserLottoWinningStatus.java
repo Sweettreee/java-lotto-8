@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class UserLottoStatus {
+public class UserLottoWinningStatus {
     public enum theNumberOfWon {
         THREE,
         FOUR,
@@ -14,19 +15,20 @@ public class UserLottoStatus {
         SIX
     }
 
-    private int purchasedCount;
+    private final int lottoCount;
     private final List<Lotto> purchasedLotto;
 
-    private final Map<theNumberOfWon, Integer> rewards = new HashMap<theNumberOfWon, Integer>();
-    private final Map<theNumberOfWon, Integer> userLottoStatus = new HashMap<theNumberOfWon, Integer>();
+    private final Map<theNumberOfWon, Integer> rewardInstruction = new HashMap<theNumberOfWon, Integer>();
+    private final Map<theNumberOfWon, Integer> winningAmounts = new HashMap<theNumberOfWon, Integer>();
     private double rateOfReturn;
 
-    public UserLottoStatus(int purchasedCount) {
-        validate(purchasedCount);
-        purchasedLotto = new ArrayList<>(purchasedCount);
-        this.purchasedCount = purchasedCount;
-        setupRewardTable();
-        setupUserLottoStatus();
+    public UserLottoWinningStatus(int paidMoney) {
+        validate(paidMoney);
+        this.lottoCount = paidMoney / 1000;
+        purchasedLotto = new ArrayList<>(this.lottoCount);
+
+        setupRewardInstruction();
+        setupUserWinningAmounts();
     }
 
     private void validate(int purchasedCount) {
@@ -35,97 +37,107 @@ public class UserLottoStatus {
         }
     }
 
-    private void setupRewardTable() {
-        rewards.put(theNumberOfWon.THREE, 5000);
-        rewards.put(theNumberOfWon.FOUR, 50000);
-        rewards.put(theNumberOfWon.FIVE, 1500000);
-        rewards.put(theNumberOfWon.SIX, 2000000000);
-        rewards.put(theNumberOfWon.BONUS, 30000000);
+    private void setupRewardInstruction() {
+        rewardInstruction.put(theNumberOfWon.THREE, 5000);
+        rewardInstruction.put(theNumberOfWon.FOUR, 50000);
+        rewardInstruction.put(theNumberOfWon.FIVE, 1500000);
+        rewardInstruction.put(theNumberOfWon.SIX, 2000000000);
+        rewardInstruction.put(theNumberOfWon.BONUS, 30000000);
     }
 
-    private void setupUserLottoStatus() {
-        userLottoStatus.put(theNumberOfWon.THREE, 0);
-        userLottoStatus.put(theNumberOfWon.FOUR, 0);
-        userLottoStatus.put(theNumberOfWon.FIVE, 0);
-        userLottoStatus.put(theNumberOfWon.SIX, 0);
-        userLottoStatus.put(theNumberOfWon.BONUS, 0);
+    private void setupUserWinningAmounts() {
+        winningAmounts.put(theNumberOfWon.THREE, 0);
+        winningAmounts.put(theNumberOfWon.FOUR, 0);
+        winningAmounts.put(theNumberOfWon.FIVE, 0);
+        winningAmounts.put(theNumberOfWon.SIX, 0);
+        winningAmounts.put(theNumberOfWon.BONUS, 0);
+    }
+
+    public int getLottoCount() {
+        return lottoCount;
+    }
+
+    public List<Lotto> getPurchasedLotto() {
+        return purchasedLotto;
+    }
+
+    public double getRateOfReturn() {
+        return rateOfReturn;
     }
 
     public void addLotto(Lotto newLotto) {
         purchasedLotto.add(newLotto);
     }
 
-    public List<Lotto> getPurchasedLottos() {
-        return purchasedLotto;
+    public Integer checkWinningLotteryNumber(Integer bonusNumber, List<Integer> lottoNumber,
+                                             List<Integer> winningLottoNumber) {
+        int commonNumber = getLottoWonNumberCount(lottoNumber, winningLottoNumber);
+        if (commonNumber == 6) {
+            return rewardInstruction.get(theNumberOfWon.SIX);
+        }
+        if (commonNumber == 5) {
+            int bonusSize = getLottoWonNumberCount(lottoNumber, List.of(bonusNumber));
+            if (bonusSize == 1) {
+                return rewardInstruction.get(theNumberOfWon.BONUS);
+            }
+            return rewardInstruction.get(theNumberOfWon.FIVE);
+        }
+        if (commonNumber == 4) {
+            return rewardInstruction.get(theNumberOfWon.FOUR);
+        }
+        if (commonNumber == 3) {
+            return rewardInstruction.get(theNumberOfWon.THREE);
+        }
+        return 0;
     }
 
-    public Map<theNumberOfWon, Integer> getUserLottoStatus() {
-        return userLottoStatus;
-    }
-
-    public int getLotterWonNumberCount(List<Integer> lottoNumber, List<Integer> winningLottoNumber) {
+    public int getLottoWonNumberCount(List<Integer> lottoNumber, List<Integer> winningLottoNumber) {
         List<Integer> winningLotteryNumberCount = lottoNumber.stream()
                 .filter(winningLottoNumber::contains)
                 .toList();
         return winningLotteryNumberCount.size();
     }
 
-    public int checkWinningLotteryNumber(Integer bonusNumber, List<Integer> lottoNumber,
-                                         List<Integer> winningLottoNumber) {
-        int size = getLotterWonNumberCount(lottoNumber, winningLottoNumber);
-        if (size == 6) {
-            return rewards.get(theNumberOfWon.SIX);
-        }
-        if (size == 5) {
-            int bonusSize = getLotterWonNumberCount(lottoNumber, List.of(bonusNumber));
-            if (bonusSize == 1) {
-                return rewards.get(theNumberOfWon.BONUS);
-            }
-            return rewards.get(theNumberOfWon.FIVE);
-        }
-        if (size == 4) {
-            return rewards.get(theNumberOfWon.FOUR);
-        }
-        if (size == 3) {
-            return rewards.get(theNumberOfWon.THREE);
-        }
-        return 0;
+    public void updateUserStatus(Integer money) {
+        theNumberOfWon rewardType = moneyType(money);
+        winningAmounts.replace(rewardType, winningAmounts.get(rewardType) + money);
     }
 
-    public theNumberOfWon moneyType(int money) {
-        for (Map.Entry<theNumberOfWon, Integer> entry : rewards.entrySet()) {
-            if (entry.getValue() == money) {
+    public theNumberOfWon moneyType(Integer money) {
+        for (Map.Entry<theNumberOfWon, Integer> entry : rewardInstruction.entrySet()) {
+            if (Objects.equals(entry.getValue(), money)) {
                 return entry.getKey();
             }
         }
         return null;
     }
 
-    public void updateUserStatus(int money) {
-        theNumberOfWon rewardType = moneyType(money);
-        userLottoStatus.replace(rewardType, userLottoStatus.get(rewardType) + money);
+    public int getUserEachLottoMoney(theNumberOfWon rewardType) {
+        return winningAmounts.get(rewardType);
     }
 
-    public int getCountOfLottoStatus(theNumberOfWon rewardType) {
-        return userLottoStatus.get(rewardType) / rewards.get(rewardType);
-    }
-
-    public int getUserLottoMoney(theNumberOfWon rewardType) {
-        return userLottoStatus.get(rewardType);
+    public void calculateRateOfReturn(long sum) {
+        double result = ((double) sum / (lottoCount * 1000)) * 100;
+        rateOfReturn = Math.round(result * 100) / 100.0;
     }
 
     public long getSumRewards() {
         int sum = 0;
-        for (theNumberOfWon key : rewards.keySet()) {
-            sum += userLottoStatus.get(key);
+        for (theNumberOfWon key : rewardInstruction.keySet()) {
+            sum += winningAmounts.get(key);
         }
 
         return sum;
     }
 
-    public double calculateRateOfReturn(long sum) {
-        double result = ((double) sum / (purchasedCount * 1000)) * 100;
-        return rateOfReturn = Math.round(result * 100) / 100.0;
+    public int getEachWinningCount(theNumberOfWon rewardType) {
+        return winningAmounts.get(rewardType) / rewardInstruction.get(rewardType);
+    }
+
+    ///
+
+    public Map<theNumberOfWon, Integer> getUserLottoStatus() {
+        return winningAmounts;
     }
 }
 

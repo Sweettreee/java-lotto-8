@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// 1. 금액을 입력 받아 융효성을 검증한다
+// 2. 스트링을 받아 유효성을 검증한다
+// 3. 보너스 번호를 입력 받아 유효성을 검증한다
 public class Lotto {
     private final List<Integer> numbers;
 
