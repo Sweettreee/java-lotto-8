@@ -13,7 +13,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 // 1. 오름차순으로 잘 저장이 됬는지
 // 2. 각 당첨 기준별 횟수와 금액 계산 및 저장
 // 3. 수익률 계산 및 저장
-public class UserLottoStatusTest {
+public class UserLottoWinningStatusTest {
     static Stream<Arguments> LottoAscendingTestData() {
         return Stream.of(
                 // 정렬되지 않은 경우들
@@ -48,11 +48,11 @@ public class UserLottoStatusTest {
     @DisplayName("로또_당첨_결과를_반영하여_당첨금액_검증")
     void testUpdateUserLottoStatus(Lotto testLottoNumber, Integer expected) {
         // given
-        final int TEST_PURCHASED_COUNT = 1;
+        final int testPaidMoney = 1000;
         final Integer BONUS_NUMBER = 20;
         List<Integer> testWinningLottoNumber = List.of(1, 2, 3, 4, 5, 6);
 
-        UserLottoStatus testUserStatus = new UserLottoStatus(TEST_PURCHASED_COUNT);
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
         testUserStatus.addLotto(testLottoNumber);
 
         // when
@@ -65,41 +65,50 @@ public class UserLottoStatusTest {
     }
 
     @Test
-    @DisplayName("당첨결과_업데이트_확인")
+    @DisplayName("당첨금액_업데이트_기능_검증")
     void checkUpdateUserLottoStatus() {
         // given
-        UserLottoStatus testUserStatus = new UserLottoStatus(1);
-        final int TESTMONEY = 5000;
-        final int EXPECTEDRESULT = 1;
-        final UserLottoStatus.theNumberOfWon TESTTYPE = UserLottoStatus.theNumberOfWon.THREE;
+        final int testPaidMoney = 1000;
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
+
+        final int TEST_MONEY = 5000;
+        final int expectedResult = 5000;
+        final UserLottoWinningStatus.theNumberOfWon TEST_TYPE = UserLottoWinningStatus.theNumberOfWon.THREE;
 
         // when
-        testUserStatus.updateUserStatus(TESTMONEY);
-        int testResult = testUserStatus.getCountOfLottoStatus(TESTTYPE);
+        testUserStatus.updateUserStatus(TEST_MONEY);
+        int testResult = testUserStatus.getUserEachLottoMoney(TEST_TYPE);
 
         // then
-        assertThat(testResult).isEqualTo(EXPECTEDRESULT);
+        assertThat(testResult).isEqualTo(expectedResult);
     }
 
     @Test
-    @DisplayName("횟수_반환하기_확인")
+    @DisplayName("횟수_계산하는_기능_검증")
     void getCountofLottoStatus() {
         // given
-        UserLottoStatus testUserStatus = new UserLottoStatus(1);
-        final int TESTMONEY = 5000;
-        final UserLottoStatus.theNumberOfWon TESTTYPE = UserLottoStatus.theNumberOfWon.THREE;
+        final int testPaidMoney = 1000;
+        final int expectedResult = 1;
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
+
+        final int TEST_MONEY = 5000;
+        final UserLottoWinningStatus.theNumberOfWon TEST_TYPE = UserLottoWinningStatus.theNumberOfWon.THREE;
 
         // when
-        testUserStatus.updateUserStatus(TESTMONEY);
-        int testResult = testUserStatus.getUserLottoMoney(TESTTYPE);
+        testUserStatus.updateUserStatus(TEST_MONEY);
+        int testResult = testUserStatus.getEachWinningCount(TEST_TYPE);
+
+        // then
+        assertThat(testResult).isEqualTo(expectedResult);
     }
 
     @Test
-    @DisplayName("모든_당첨금액의_합_구하는지_확인")
+    @DisplayName("모든_당첨금액의_합_구하는지_검증")
     void checkMoneySum() {
         // given
-        long testResult = 2001555000;
-        UserLottoStatus testUserStatus = new UserLottoStatus(1);
+        int testPaidMoney = 1000;
+        final long expectedResult = 2001555000;
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
         testUserStatus.updateUserStatus(5000);
         testUserStatus.updateUserStatus(50000);
         testUserStatus.updateUserStatus(1500000);
@@ -109,22 +118,23 @@ public class UserLottoStatusTest {
         double testSum = testUserStatus.getSumRewards();
 
         // then
-        assertThat(testSum).isEqualTo(testResult);
+        assertThat(testSum).isEqualTo(expectedResult);
     }
 
     @Test
-    @DisplayName("수익률 계산")
+    @DisplayName("수익률_계산_기능_검증")
     void updateUserLottoStatus() {
         // given
-        int testTryNumber = 8;
-        int testSum = 5000;
-        UserLottoStatus testUserStatus = new UserLottoStatus(testTryNumber);
-        final double expected = 62.5;
+        final int testPaidMoney = 8000;
+        final int testSum = 5000;
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
+        final double expectedResult = 62.5;
 
         // when
-        double testResult = testUserStatus.calculateRateOfReturn(testSum);
+        testUserStatus.calculateRateOfReturn(testSum);
+        double testResult = testUserStatus.getRateOfReturn();
 
         // then
-        assertThat(testResult).isEqualTo(expected);
+        assertThat(testResult).isEqualTo(expectedResult);
     }
 }
