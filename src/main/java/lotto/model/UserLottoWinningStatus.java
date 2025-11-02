@@ -21,11 +21,18 @@ public class UserLottoStatus {
     private final Map<theNumberOfWon, Integer> userLottoStatus = new HashMap<theNumberOfWon, Integer>();
     private double rateOfReturn;
 
-    UserLottoStatus(int purchasedCount) {
-        purchasedLotto = new ArrayList<>();
+    public UserLottoStatus(int purchasedCount) {
+        validate(purchasedCount);
+        purchasedLotto = new ArrayList<>(purchasedCount);
         this.purchasedCount = purchasedCount;
         setupRewardTable();
         setupUserLottoStatus();
+    }
+
+    private void validate(int purchasedCount) {
+        if (purchasedCount % 1000 != 0) {
+            throw new IllegalArgumentException("[ERROR] 금액은 1000단위여야 합니다.");
+        }
     }
 
     private void setupRewardTable() {
@@ -50,6 +57,10 @@ public class UserLottoStatus {
 
     public List<Lotto> getPurchasedLottos() {
         return purchasedLotto;
+    }
+
+    public Map<theNumberOfWon, Integer> getUserLottoStatus() {
+        return userLottoStatus;
     }
 
     public int getLotterWonNumberCount(List<Integer> lottoNumber, List<Integer> winningLottoNumber) {
@@ -81,11 +92,21 @@ public class UserLottoStatus {
         return 0;
     }
 
-    public void updateUserStatus(int money, theNumberOfWon rewardType) {
+    public theNumberOfWon moneyType(int money) {
+        for (Map.Entry<theNumberOfWon, Integer> entry : rewards.entrySet()) {
+            if (entry.getValue() == money) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
+
+    public void updateUserStatus(int money) {
+        theNumberOfWon rewardType = moneyType(money);
         userLottoStatus.replace(rewardType, userLottoStatus.get(rewardType) + money);
     }
 
-    public int getCountofLottoStatus(theNumberOfWon rewardType) {
+    public int getCountOfLottoStatus(theNumberOfWon rewardType) {
         return userLottoStatus.get(rewardType) / rewards.get(rewardType);
     }
 
@@ -102,7 +123,7 @@ public class UserLottoStatus {
         return sum;
     }
 
-    public double calculateRateOfReturn(int sum) {
+    public double calculateRateOfReturn(long sum) {
         double result = ((double) sum / (purchasedCount * 1000)) * 100;
         return rateOfReturn = Math.round(result * 100) / 100.0;
     }

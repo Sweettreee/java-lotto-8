@@ -74,8 +74,8 @@ public class UserLottoStatusTest {
         final UserLottoStatus.theNumberOfWon TESTTYPE = UserLottoStatus.theNumberOfWon.THREE;
 
         // when
-        testUserStatus.updateUserStatus(TESTMONEY, TESTTYPE);
-        int testResult = testUserStatus.getCountofLottoStatus(TESTTYPE);
+        testUserStatus.updateUserStatus(TESTMONEY);
+        int testResult = testUserStatus.getCountOfLottoStatus(TESTTYPE);
 
         // then
         assertThat(testResult).isEqualTo(EXPECTEDRESULT);
@@ -90,7 +90,7 @@ public class UserLottoStatusTest {
         final UserLottoStatus.theNumberOfWon TESTTYPE = UserLottoStatus.theNumberOfWon.THREE;
 
         // when
-        testUserStatus.updateUserStatus(TESTMONEY, TESTTYPE);
+        testUserStatus.updateUserStatus(TESTMONEY);
         int testResult = testUserStatus.getUserLottoMoney(TESTTYPE);
     }
 
@@ -100,13 +100,13 @@ public class UserLottoStatusTest {
         // given
         long testResult = 2001555000;
         UserLottoStatus testUserStatus = new UserLottoStatus(1);
-        testUserStatus.updateUserStatus(5000, UserLottoStatus.theNumberOfWon.THREE);
-        testUserStatus.updateUserStatus(50000, UserLottoStatus.theNumberOfWon.FOUR);
-        testUserStatus.updateUserStatus(1500000, UserLottoStatus.theNumberOfWon.FIVE);
-        testUserStatus.updateUserStatus(2000000000, UserLottoStatus.theNumberOfWon.SIX);
+        testUserStatus.updateUserStatus(5000);
+        testUserStatus.updateUserStatus(50000);
+        testUserStatus.updateUserStatus(1500000);
+        testUserStatus.updateUserStatus(2000000000);
 
         // when
-        long testSum = testUserStatus.getSumRewards();
+        double testSum = testUserStatus.getSumRewards();
 
         // then
         assertThat(testSum).isEqualTo(testResult);
