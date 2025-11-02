@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
 import java.util.stream.Stream;
+import lotto.model.UserLottoWinningStatus.theNumberOfWon;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -23,7 +24,7 @@ public class UserLottoWinningStatusTest {
         );
     }
 
-    static Stream<Arguments> LottoNumberData() {
+    static Stream<Arguments> LottoNumberTestData() {
         return Stream.of(
                 Arguments.of(new Lotto(List.of(1, 2, 3, 4, 5, 6)), 2000000000), // 6개 일치
                 Arguments.of(new Lotto(List.of(1, 2, 3, 4, 5, 20)), 30000000), // 5개 일치
@@ -36,6 +37,16 @@ public class UserLottoWinningStatusTest {
         );
     }
 
+    static Stream<Arguments> LottoNumberCountTestData() {
+        return Stream.of(
+                Arguments.of(new Lotto(List.of(1, 2, 3, 4, 5, 6)), theNumberOfWon.SIX), // 6개 일치
+                Arguments.of(new Lotto(List.of(1, 2, 3, 4, 5, 20)), theNumberOfWon.BONUS), // 5개 일치
+                Arguments.of(new Lotto(List.of(1, 2, 3, 4, 5, 7)), theNumberOfWon.FIVE), // 5개 일치
+                Arguments.of(new Lotto(List.of(1, 2, 3, 4, 7, 8)), theNumberOfWon.FOUR), // 4개 일치
+                Arguments.of(new Lotto(List.of(1, 2, 3, 7, 8, 9)), theNumberOfWon.THREE) // 3개 일치
+        );
+    }
+
     @ParameterizedTest(name = "{displayName}")
     @MethodSource("LottoAscendingTestData")
     @DisplayName("로또가_오름차순으로_저장되있는지_검증")
@@ -44,7 +55,7 @@ public class UserLottoWinningStatusTest {
     }
 
     @ParameterizedTest(name = "{displayName}(testLottoNumber = {0}, expected = {1})")
-    @MethodSource("LottoNumberData")
+    @MethodSource("LottoNumberTestData")
     @DisplayName("로또_당첨_결과를_반영하여_당첨금액_검증")
     void testUpdateUserLottoStatus(Lotto testLottoNumber, Integer expected) {
         // given
@@ -83,20 +94,25 @@ public class UserLottoWinningStatusTest {
         assertThat(testResult).isEqualTo(expectedResult);
     }
 
-    @Test
-    @DisplayName("횟수_계산하는_기능_검증")
-    void getCountofLottoStatus() {
+    @ParameterizedTest(name = "{displayName}")
+    @MethodSource("LottoNumberCountTestData")
+    @DisplayName("횟수_반환_기능_검증")
+    void getCountofLottoStatus(Lotto testLottoNumber, theNumberOfWon moneyType) {
         // given
         final int testPaidMoney = 1000;
         final int expectedResult = 1;
-        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
+        final Integer BONUS_NUMBER = 20;
+        List<Integer> testWinningLottoNumber = List.of(1, 2, 3, 4, 5, 6);
 
-        final int TEST_MONEY = 5000;
-        final UserLottoWinningStatus.theNumberOfWon TEST_TYPE = UserLottoWinningStatus.theNumberOfWon.THREE;
+        UserLottoWinningStatus testUserStatus = new UserLottoWinningStatus(testPaidMoney);
+        testUserStatus.addLotto(testLottoNumber);
 
         // when
-        testUserStatus.updateUserStatus(TEST_MONEY);
-        int testResult = testUserStatus.getEachWinningCount(TEST_TYPE);
+        List<Integer> testNumber = testLottoNumber.getNumbers();
+        int testMoney = testUserStatus.checkWinningLotteryNumber(BONUS_NUMBER, testNumber,
+                testWinningLottoNumber);
+        testUserStatus.updateUserStatus(testMoney);
+        long testResult = testUserStatus.getEachWinningCount(moneyType);
 
         // then
         assertThat(testResult).isEqualTo(expectedResult);
