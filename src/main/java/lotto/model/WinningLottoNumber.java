@@ -32,6 +32,11 @@ public class WinningLottoNumber {
         if (bonusNumber == null || !(1 <= bonusNumber && bonusNumber <= 45)) {
             throw new IllegalArgumentException("[ERROR] 로또 보너스 번호는 1부터 45의 범위여야 합니다.");
         }
+
+        if (numSet.contains(bonusNumber)) {
+            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다");
+        }
+
     }
 
     public List<Integer> getWinningNumbers() {
