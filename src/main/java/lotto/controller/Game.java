@@ -41,8 +41,18 @@ public class Game {
     }
 
     WinningLottoNumber pickWinningLotto() {
-        List<Integer> winningNumbers = parsingWinningLottoNumbers(Input.readWinningNumbers());
-        Integer bonusNumber = Input.readBonusNumber();
+        List<Integer> winningNumbers;
+        Integer bonusNumber;
+        while (true) {
+            try {
+                winningNumbers = parsingWinningLottoNumbers(Input.readWinningNumbers());
+                bonusNumber = Input.readBonusNumber();
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         return new WinningLottoNumber(winningNumbers, bonusNumber);
     }
 
