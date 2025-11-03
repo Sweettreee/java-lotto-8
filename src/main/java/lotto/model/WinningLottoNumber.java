@@ -10,7 +10,7 @@ public class WinningLottoNumber {
 
     public WinningLottoNumber(List<Integer> winningNumbers, Integer bonusNumber) {
         validateBonusNumber(winningNumbers, bonusNumber);
-        validate(winningNumbers);
+        validateWinningNumber(winningNumbers);
         this.winningNumbers = winningNumbers;
         this.bonusNumber = bonusNumber;
     }
@@ -24,7 +24,7 @@ public class WinningLottoNumber {
         }
     }
 
-    private void validate(List<Integer> winningNumbers) {
+    private void validateWinningNumber(List<Integer> winningNumbers) {
         Set<Integer> numSet = new HashSet<>(winningNumbers);
         if (winningNumbers.size() != 6) {
             throw new IllegalArgumentException("[ERROR] 로또 당첨 번호는 6개여야 합니다.");
