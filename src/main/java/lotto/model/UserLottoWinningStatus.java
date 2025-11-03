@@ -31,9 +31,17 @@ public class UserLottoWinningStatus {
         setupUserWinningAmounts();
     }
 
-    private void validate(int purchasedCount) {
-        if (purchasedCount % 1000 != 0) {
+    private void validate(int paidMoney) {
+        if (paidMoney % 1000 != 0 && 1000 <= paidMoney && paidMoney <= 2000000000) {
             throw new IllegalArgumentException("[ERROR] 금액은 1000단위여야 합니다.");
+        }
+
+        if (paidMoney < 0) {
+            throw new IllegalArgumentException("[ERROR] 금액은 음수를 허용하지 않습니다.");
+        }
+
+        if (paidMoney > 2000000000) {
+            throw new IllegalArgumentException("[ERROR] 금액은 20억을 넘을 수 없습니다.");
         }
     }
 
