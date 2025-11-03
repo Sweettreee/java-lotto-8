@@ -35,8 +35,16 @@ public class Game {
     void pickLottos(UserLottoWinningStatus userLottoWinningStatus) {
         int lottoCount = userLottoWinningStatus.getLottoCount();
         for (int i = 0; i < lottoCount; i++) {
-            Lotto newLotto = pickLotto(randomNumberGenerate());
-            userLottoWinningStatus.addLotto(newLotto);
+            while (true) {
+                try {
+                    Lotto newLotto = pickLotto(randomNumberGenerate());
+                    userLottoWinningStatus.addLotto(newLotto);
+                    break;
+                } catch (IllegalArgumentException e) {
+                    System.out.println(e.getMessage());
+                }
+            }
+
         }
     }
 
