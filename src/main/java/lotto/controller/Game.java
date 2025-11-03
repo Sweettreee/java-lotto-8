@@ -7,6 +7,7 @@ import java.util.List;
 import lotto.model.Lotto;
 import lotto.model.UserLottoWinningStatus;
 import lotto.model.WinningLottoNumber;
+import lotto.support.Parsing;
 import lotto.view.Input;
 import lotto.view.Output;
 
@@ -65,12 +66,7 @@ public class Game {
     }
 
     List<Integer> parsingWinningLottoNumbers(String winningLottoNumbers) {
-        int[] tmp;
-        try {
-            tmp = Arrays.stream(winningLottoNumbers.split(",")).mapToInt(Integer::parseInt).toArray();
-        } catch (NumberFormatException e) {
-            throw new NumberFormatException("[ERROR] 당첨 번호는 정수여야합니다.");
-        }
+        int[] tmp = Parsing.parseStringIntoInteger(winningLottoNumbers);
         return Arrays.stream(tmp).boxed().toList();
     }
 
