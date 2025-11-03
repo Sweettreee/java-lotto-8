@@ -1,6 +1,7 @@
 package lotto.model;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -152,5 +153,32 @@ public class UserLottoWinningStatusTest {
 
         // then
         assertThat(testResult).isEqualTo(expectedResult);
+    }
+
+    @Test
+    @DisplayName("입력된_금액이_1000의_배수가_아니면_예외를_발생시킨다")
+    void verifyPaidMoneyNotMultipleThousand() {
+        final int testPaidMoney = 1010;
+        assertThatThrownBy(() -> new UserLottoWinningStatus(testPaidMoney))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 금액은 1000단위여야 합니다.");
+    }
+
+    @Test
+    @DisplayName("입력된_금액이_음수라면_예외를_발생시킨다")
+    void verifyPaidMoneyNotNegative() {
+        final int testPaidMoney = -1000;
+        assertThatThrownBy(() -> new UserLottoWinningStatus(testPaidMoney))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 금액은 음수를 허용하지 않습니다.");
+    }
+
+    @Test
+    @DisplayName("입력된_금액이_20억을_초과하면_예외를_발생시킨다")
+    void verifyPaidMoneyLimit() {
+        final int testPaidMoney = 2100000000;
+        assertThatThrownBy(() -> new UserLottoWinningStatus(testPaidMoney))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 금액은 20억을 넘을 수 없습니다.");
     }
 }
