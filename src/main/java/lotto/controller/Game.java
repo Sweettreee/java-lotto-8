@@ -47,7 +47,12 @@ public class Game {
     }
 
     List<Integer> parsingWinningLottoNumbers(String winningLottoNumbers) {
-        int[] tmp = Arrays.stream(winningLottoNumbers.split(",")).mapToInt(Integer::parseInt).toArray();
+        int[] tmp;
+        try {
+            tmp = Arrays.stream(winningLottoNumbers.split(",")).mapToInt(Integer::parseInt).toArray();
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("[ERROR] 당첨 번호는 정수여야합니다.");
+        }
         return Arrays.stream(tmp).boxed().toList();
     }
 
@@ -59,7 +64,7 @@ public class Game {
                 userLottoWinningStatus = new UserLottoWinningStatus(paidMoney);// 로또 유저 테이블 생성
                 break;
             } catch (IllegalArgumentException e) {
-                System.out.println("[ERROR] 금액은 1000단위여야 합니다.");
+                System.out.println(e.getMessage());
             }
         }
         return userLottoWinningStatus;
