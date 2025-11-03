@@ -11,7 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 public class WinningLottoNumberTest {
-    private final Integer TEST_BONUS_NUMBER = 1;
+    private final Integer TEST_BONUS_NUMBER = 30;
 
     static Stream<Arguments> LottoNumberSizeTestData() {
         return Stream.of(
