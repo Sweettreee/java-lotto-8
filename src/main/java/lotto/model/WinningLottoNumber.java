@@ -20,7 +20,7 @@ public class WinningLottoNumber {
             throw new IllegalArgumentException("[ERROR] 로또 보너스 번호는 1부터 45의 범위여야 합니다.");
         }
         if (winningNumbers.contains(bonusNumber)) {
-            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다");
+            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다.");
         }
     }
 
