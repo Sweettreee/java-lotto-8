@@ -81,25 +81,13 @@ public class Game {
     }
 
     public void run() {
-        // 금액 입력 및 현황판 생성
-        UserLottoWinningStatus userLottoWinningStatus = readPaidMoneyThenMakeUserStatus();
-
-        // 로또 생성
-        pickLottos(userLottoWinningStatus);
-
-        // 생성한 로또 출력 함수
-        Output.printLotto(userLottoWinningStatus);
-        // 당첨 번호 생성 및 저장
-        WinningLottoNumber winningLottoNumber = pickWinningLotto();
-
-        // 로또 당첨 현황 업데이트
-        checkLotto(winningLottoNumber, userLottoWinningStatus);
-
-        // 로또 수익률 계산 및 저장
-        updateProfitRate(userLottoWinningStatus);
-
-        // 결과 출력
-        Output.printResult(userLottoWinningStatus);
-        Output.printProfitRate(userLottoWinningStatus);
+        UserLottoWinningStatus userLottoWinningStatus = readPaidMoneyThenMakeUserStatus(); // 금액 입력 및 현황판 생성
+        pickLottos(userLottoWinningStatus); // 로또 생성
+        Output.printLotto(userLottoWinningStatus); // 생성한 로또 출력 함수
+        WinningLottoNumber winningLottoNumber = pickWinningLotto(); // 당첨 번호 생성 및 저장
+        checkLotto(winningLottoNumber, userLottoWinningStatus); // 로또 당첨 현황 업데이트
+        updateProfitRate(userLottoWinningStatus); // 로또 수익률 계산 및 저장
+        Output.printResult(userLottoWinningStatus); // 당첨 종류별 결과 출력
+        Output.printProfitRate(userLottoWinningStatus); // 수익률 출력
     }
 }

@@ -9,14 +9,23 @@ public class WinningLottoNumber {
     private final Integer bonusNumber;
 
     public WinningLottoNumber(List<Integer> winningNumbers, Integer bonusNumber) {
-        validate(winningNumbers, bonusNumber);
+        validateBonusNumber(winningNumbers, bonusNumber);
+        validate(winningNumbers);
         this.winningNumbers = winningNumbers;
         this.bonusNumber = bonusNumber;
     }
 
-    private void validate(List<Integer> winningNumbers, Integer bonusNumber) {
-        Set<Integer> numSet = new HashSet<>(winningNumbers);
+    private void validateBonusNumber(List<Integer> winningNumbers, Integer bonusNumber) {
+        if (bonusNumber == null || !(1 <= bonusNumber && bonusNumber <= 45)) {
+            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호는 1부터 45의 범위여야 합니다.");
+        }
+        if (winningNumbers.contains(bonusNumber)) {
+            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다");
+        }
+    }
 
+    private void validate(List<Integer> winningNumbers) {
+        Set<Integer> numSet = new HashSet<>(winningNumbers);
         if (winningNumbers.size() != 6) {
             throw new IllegalArgumentException("[ERROR] 로또 당첨 번호는 6개여야 합니다.");
         }
@@ -28,15 +37,6 @@ public class WinningLottoNumber {
         if (numSet.size() != winningNumbers.size()) {
             throw new IllegalArgumentException("[ERROR] 로또 당첨 번호는 서로 중복되지 않아야 합니다.");
         }
-
-        if (bonusNumber == null || !(1 <= bonusNumber && bonusNumber <= 45)) {
-            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호는 1부터 45의 범위여야 합니다.");
-        }
-
-        if (numSet.contains(bonusNumber)) {
-            throw new IllegalArgumentException("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다");
-        }
-
     }
 
     public List<Integer> getWinningNumbers() {
