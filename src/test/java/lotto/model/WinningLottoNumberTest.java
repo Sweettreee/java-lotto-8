@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -78,5 +79,15 @@ public class WinningLottoNumberTest {
         assertThatThrownBy(() -> new WinningLottoNumber(testLottoNumbers, testBonusNumber))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("[ERROR] 로또 보너스 번호는 1부터 45의 범위여야 합니다.");
+    }
+
+    @Test
+    @DisplayName("보너스_번호와_당첨_번호가_중복되면_예외가_발생한다")
+    void verifyBonusNUmberDuplication() {
+        List<Integer> testWinningNumbers = List.of(1, 2, 3, 4, 5, 20);
+        Integer testBonusNumber = 20;
+        assertThatThrownBy(() -> new WinningLottoNumber(testWinningNumbers, testBonusNumber))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("[ERROR] 로또 보너스 번호와 당첨 번호는 중복되지 않아야 합니다");
     }
 }
