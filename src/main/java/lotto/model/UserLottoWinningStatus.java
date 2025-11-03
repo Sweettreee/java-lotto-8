@@ -80,23 +80,23 @@ public class UserLottoWinningStatus {
     public Integer checkWinningLotteryNumber(Integer bonusNumber, List<Integer> lottoNumber,
                                              List<Integer> winningLottoNumber) {
         int commonNumber = getLottoWonNumberCount(lottoNumber, winningLottoNumber);
-        int[] number = {3, 4, 5, 5, 6};
-        int index = 0;
-        for (theNumberOfWon type : theNumberOfWon.values()) {
-            if (number[index] == commonNumber) {
-                return rewardInstruction.get(type);
-            }
-            if (number[index] == commonNumber && number[index] == 5) {
-                return checkFiveBonusNumber(bonusNumber, lottoNumber);
-            }
-            index++;
+        if (commonNumber == 5) {
+            return checkFiveBonusNumber(bonusNumber, lottoNumber);
+        }
+
+        Map<Integer, theNumberOfWon> map = Map.of(
+                3, theNumberOfWon.THREE,
+                4, theNumberOfWon.FOUR,
+                6, theNumberOfWon.SIX
+        );
+        if (commonNumber >= 3) {
+            return rewardInstruction.get(map.get(commonNumber));
         }
         return 0;
     }
 
     public Integer checkFiveBonusNumber(Integer bonusNumber, List<Integer> lottoNumber) {
         int bonusSize = getLottoWonNumberCount(lottoNumber, List.of(bonusNumber));
-
         if (bonusSize == 1) {
             return rewardInstruction.get(theNumberOfWon.BONUS);
         }
